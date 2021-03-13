@@ -1,20 +1,24 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- <ion-header [translucent]="true">
+    <ion-toolbar>
+        <ion-title class="ion-text-center">
+            Welcome to Be My Scribe!
+        </ion-title>
+    </ion-toolbar>
+</ion-header> -->
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <!-- <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">Blank</ion-title>
+        </ion-toolbar>
+    </ion-header> -->
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+    <div id="container">
+        <img src="assets/logo.jpg" alt="Logo" width="100">
+        <h1 class="ion-margin">Welcome to Be My Scribe!</h1>
+        <!-- <strong class="ion-margin"></strong> -->
+        <ion-button color="primary" expand="block" routerLink="/auth/student">Register as student</ion-button>
+        <ion-button color="tertiary" expand="block" routerLink="/auth/volunteer">Register as volunteer</ion-button>
+        <ion-button color="dark" expand="block" fill="outline" routerLink="/auth/login">Login</ion-button>
+    </div>
 </ion-content>
