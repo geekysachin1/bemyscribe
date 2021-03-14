@@ -1,30 +1,27 @@
-import { LoginComponent } from './auth/login/login.component';
-import { VolunteerComponent } from './auth/volunteer/volunteer.component';
-import { StudentComponent } from './auth/student/student.component';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
     {
-        path: 'home',
-        loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
+      path: 'home',
+      loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
     },
     {
-        path: 'auth/student',
-        component: StudentComponent
+      path: 'login',
+      loadChildren: () => import('./auth/login/login.module').then( m => m.LoginPageModule)
     },
     {
-        path: 'auth/volunteer',
-        component: VolunteerComponent
+      path: 'scribe-seeker',
+      loadChildren: () => import('./auth/registration/scribe-seeker/scribe-seeker.module').then( m => m.ScribeSeekerPageModule)
     },
     {
-        path: 'auth/login',
-        component: LoginComponent
+      path: 'scribe-volunteer',
+      loadChildren: () => import('./auth/registration/scribe-volunteer/scribe-volunteer.module').then( m => m.ScribeVolunteerPageModule)
     },
     {
-        path: '',
-        redirectTo: 'home',
-        pathMatch: 'full'
+      path: '',
+      redirectTo: 'home',
+      pathMatch: 'full'
     },
 ];
 
