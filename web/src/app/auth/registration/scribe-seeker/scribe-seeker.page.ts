@@ -16,10 +16,15 @@ export class ScribeSeekerPage implements OnInit {
         validators: [Validators.required]
       }),
       email: new FormControl('', {
-        validators: [Validators.required, Validators.maxLength(180)]
+        validators: [Validators.required]
       }),
-      gender: new FormControl(''),
-      languagesKnown: new FormControl(''),
+      gender: new FormControl('', {
+        validators: [Validators.required]
+      }),
+      mobileno: new FormControl(''),
+      languagesKnown: new FormControl('', {
+        validators: [Validators.required]
+      }),
     });
   }
 
