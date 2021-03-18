@@ -2,16 +2,18 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_restful import Api,Resource,request
 
 database_dir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 
+app.config['SECRET_KEY'] = 'mykeyishere'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(database_dir, 'data.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-
+api = Api(app)
 migrate = Migrate(app,db)
 
 # Creating a disabled persons table
@@ -21,7 +23,7 @@ class Disabled(db.Model):
 	name = db.Column(db.Text)
 	email = db.Column(db.String(64),unique=True,index=True,nullable=False)
 	mobile = db.Column(db.Integer)
-	applications = db.relationship('Application',backref='Disabled',lazy='dynamic')
+	exams = db.relationship('Exam',backref='Disabled',lazy='dynamic')
 	ratings = db.relationship('Volunteer_Rating',backref='Disabled',lazy='dynamic')
 	def __init__(self,name,email,mobile):
 		self.name =  name
@@ -48,7 +50,7 @@ class Volunteer(db.Model):
 	language_3 = db.Column(db.String(64))
 	highest_degree = db.Column(db.String(64))
 	vol_status = db.Column(db.String(64),default = "Y")
-	applications = db.relationship('Application',backref='Volunteer',lazy='dynamic')
+	examss = db.relationship('Exam',backref='Volunteer',lazy='dynamic')
 	ratings = db.relationship('Volunteer_Rating',backref='Volunteer',lazy='dynamic')
 	def __init__(self,name,email,mobile,gender,city_town_village,state,pincode,language_1,language_2,language_3,highest_degree):
 		self.name=name
@@ -68,7 +70,7 @@ class Volunteer(db.Model):
 		return f"Volunteer: {self.name}    "
 
 # Creating application master table
-class Application(db.Model):
+class Exam(db.Model):
 	id = db.Column(db.Integer,primary_key=True)
 
 	exam_name = db.Column(db.Text)
@@ -120,5 +122,24 @@ class Volunteer_Rating(db.Model):
 	def __repr__(self):
 		return f"Feedback ID: {self.id} ------ Disabled person ID: {self.disabled_id} ---- Volunteer ID: {self.volunteer_id}"
 
+# Resouce creation
+class DisabledResource(Resource):
+	def post(self,email):
+		data = request.get_json()
+		name = data["name"]
+		mobile = data["mobile"]
+		disabled_user = Disabled(name=name,email=email,mobile=mobile)
+		db.session.add(disabled_user)
+		db.session.commit()
+		return disabled_user.json()
+	def get(self,email):
+		disabled_user = Disabled.query.filter_by(email=email).first()
+		if disabled_user:
+			return disabled_user.json(), 200
+		else:
+			return {'email':'not found'}, 404
 
 
+api.add_resource(DisabledResource,'/disabled/<string:email>')
+
+app.run(port=5000,debug=True)
