@@ -16,3 +16,12 @@ Running the file
 -----------------
 1.python BasicModel.py
 2.open the link http://127.0.0.1:5000/disabled/vsrraviteja@gmail.com
+
+List of api
+1. Request type: POST
+  URL: localhost:5000/disabledRegister
+  sample data : 			{"name":"arun","email":"arunkumar629@gmail.com","mobile":8056018286}
+
+2. request type : POST
+  URL: localhost:5000/volunteerRegister
+  sample data: {"name":"arun","email":"arunkumar629@gmail.com","mobile":8056018286,"gender":"male","city_town_village":"chennnai","state":"tamilnadu","pincode":600103,"language_1":"tamil","language_2":"english","language_3":"none","highest_degree":"MCA"} 	
