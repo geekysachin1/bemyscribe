@@ -122,16 +122,42 @@ class Volunteer_Rating(db.Model):
 	def __repr__(self):
 		return f"Feedback ID: {self.id} ------ Disabled person ID: {self.disabled_id} ---- Volunteer ID: {self.volunteer_id}"
 
-# Resouce creation
-class DisabledResource(Resource):
-	def post(self,email):
+#disabledregister
+class DisabledRegister(Resource):
+	def post(self):
 		data = request.get_json()
 		name = data["name"]
+		email = data["email"]
 		mobile = data["mobile"]
 		disabled_user = Disabled(name=name,email=email,mobile=mobile)
 		db.session.add(disabled_user)
 		db.session.commit()
 		return disabled_user.json()
+
+#volunteerregister
+class VolunteerRegister(Resource):
+	def post(self):
+		data = request.get_json()
+		name = data["name"]
+		email = data["email"]
+		mobile = data["mobile"]
+		gender=data["gender"]
+		city_town_village=data["city_town_village"]
+		state=data["state"]
+		pincode=data["pincode"]
+		language_1=data["language_1"]
+		language_2=data["language_2"]
+		language_3=data["language_3"]
+		highest_degree=data["highest_degree"]
+#		vol_status=data["vol_status"]
+		volunteer_user = Volunteer(name=name,email=email,mobile=mobile,gender=gender,city_town_village=city_town_village,state=state,pincode=pincode,language_1=language_1,language_2=language_2,language_3=language_3,highest_degree=highest_degree)
+		db.session.add(volunteer_user)
+		db.session.commit()
+		return volunteer_user.json()
+
+# Fetch user
+class DisabledResource(Resource):
+
 	def get(self,email):
 		disabled_user = Disabled.query.filter_by(email=email).first()
 		if disabled_user:
@@ -141,5 +167,6 @@ class DisabledResource(Resource):
 
 
 api.add_resource(DisabledResource,'/disabled/<string:email>')
-
+api.add_resource(DisabledRegister,'/disabledRegister')
+api.add_resource(VolunteerRegister,'/volunteerRegister')
 app.run(port=5000,debug=True)
