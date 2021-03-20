@@ -3,6 +3,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_restful import Api,Resource,request
+from werkzeug.security import generate_password_hash,check_password_hash
+from flask_jwt import JWT ,jwt_required
 
 database_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -15,6 +17,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 api = Api(app)
 migrate = Migrate(app,db)
+jwt = JWT(app, authenticate, identity)
 
 # Creating a disabled persons table
 class Disabled(db.Model):
@@ -23,12 +26,16 @@ class Disabled(db.Model):
 	name = db.Column(db.Text)
 	email = db.Column(db.String(64),unique=True,index=True,nullable=False)
 	mobile = db.Column(db.Integer)
+	password_hash = db.Column(db.String(128))
 	exams = db.relationship('Exam',backref='Disabled',lazy='dynamic')
 	ratings = db.relationship('Volunteer_Rating',backref='Disabled',lazy='dynamic')
-	def __init__(self,name,email,mobile):
+	def __init__(self,name,email,mobile,password):
 		self.name =  name
 		self.email = email
 		self.mobile = mobile
+		self.password_hash = generate_password_hash(password)
+	def check_password(self,password):
+		return check_password_hash(self.password_hash,password)
 	def json(self):
 		return {"name":self.name,"email":self.email,"mobile":self.mobile}
 	def __repr__(self):
@@ -41,6 +48,7 @@ class Volunteer(db.Model):
 	name = db.Column(db.Text)
 	email = db.Column(db.String(64),unique=True,index=True,nullable=False)
 	mobile = db.Column(db.Integer)
+	password_hash = db.Column(db.String(128))
 	gender = db.Column(db.String(20))
 	city_town_village = db.Column(db.String(128))
 	state = db.Column(db.String(64))
@@ -52,10 +60,11 @@ class Volunteer(db.Model):
 	vol_status = db.Column(db.String(64),default = "Y")
 	examss = db.relationship('Exam',backref='Volunteer',lazy='dynamic')
 	ratings = db.relationship('Volunteer_Rating',backref='Volunteer',lazy='dynamic')
-	def __init__(self,name,email,mobile,gender,city_town_village,state,pincode,language_1,language_2,language_3,highest_degree):
+	def __init__(self,name,email,mobile,password,gender,city_town_village,state,pincode,language_1,language_2,language_3,highest_degree):
 		self.name=name
 		self.email = email
 		self.mobile = mobile
+		self.password_hash = generate_password_hash(password)
 		self.gender = gender
 		self.city_town_village = city_town_village
 		self.state = state
@@ -64,6 +73,8 @@ class Volunteer(db.Model):
 		self.language_2 = language_2
 		self.language_3 = language_3
 		self.highest_degree = highest_degree
+	def check_password(self,password):
+		return check_password_hash(self.password_hash,password)
 	def json(self):
 		return {"name":self.name,"email":self.email,"mobile":self.mobile}
 	def __repr__(self):
@@ -169,4 +180,17 @@ class DisabledResource(Resource):
 api.add_resource(DisabledResource,'/disabled/<string:email>')
 api.add_resource(DisabledRegister,'/disabledRegister')
 api.add_resource(VolunteerRegister,'/volunteerRegister')
+
+# Implementing JWT 
+def authenticate(email, password):
+	if bool(Disabled.query.filter_by(email = email).first())
+		user = Volunteer.query.filter_by(email = email).first()
+	else:
+		user = Disabled.query.filter_by(email = email).first()
+	if user and user.check_password(password):
+		return user
+
+# identity function here
+
+
 app.run(port=5000,debug=True)
