@@ -1,24 +1,15 @@
-<!-- <ion-header [translucent]="true">
+<ion-header [translucent]="true">
     <ion-toolbar>
-        <ion-title class="ion-text-center">
-            Welcome to Be My Scribe!
-        </ion-title>
+      <app-languages slot="end"></app-languages>
     </ion-toolbar>
-</ion-header> -->
+</ion-header>
 
 <ion-content [fullscreen]="true">
-    <!-- <ion-header collapse="condense">
-        <ion-toolbar>
-            <ion-title size="large">Blank</ion-title>
-        </ion-toolbar>
-    </ion-header> -->
-
     <div id="container">
         <img src="assets/logo.jpg" alt="Logo" width="100">
-        <h1 class="ion-margin">Welcome to Be My Scribe!</h1>
-        <!-- <strong class="ion-margin"></strong> -->
-        <ion-button color="primary" expand="block" routerLink="/scribe-seeker">Register as Scribe Seeker</ion-button>
-        <ion-button color="secondary" expand="block" routerLink="/scribe-volunteer">Register as Scribe Volunteer</ion-button>
-        <ion-button color="tertiary" expand="block" fill="outline" routerLink="/login">Login</ion-button>
+        <h1 class="ion-margin">{{'HOME.WELCOME_MSG' | translate}}</h1>
+        <ion-button color="primary" expand="block" routerLink="/scribe-seeker">{{'HOME.SCRIBE_SEEKER_REGISTRATION_BTN_LABEL' | translate}}</ion-button>
+        <ion-button color="secondary" expand="block" routerLink="/scribe-volunteer">{{ 'HOME.SCRIBE_VOLUNTEER_REGISTRATION_BTN_LABEL' | translate }}</ion-button>
+        <ion-button color="tertiary" expand="block" fill="outline" routerLink="/login">{{ 'HOME.LOGIN_BRN_LABEL' | translate}}</ion-button>
     </div>
 </ion-content>
