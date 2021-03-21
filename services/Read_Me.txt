@@ -25,3 +25,9 @@ List of api
 2. request type : POST
   URL: localhost:5000/volunteerRegister
   sample data: {"name":"arun","email":"arunkumar629@gmail.com","mobile":8056018286,"gender":"male","city_town_village":"chennnai","state":"tamilnadu","pincode":600103,"language_1":"tamil","language_2":"english","language_3":"none","highest_degree":"MCA"} 	
+
+Swagger Integration for API Documentation/Testing
+----------------------------------------------------
+1. Whenever you create new API, add Scheema, and register API to docs
+2. Swagger URL: http://127.0.0.1:5000/swagger-ui/
+3. Click any API and Try Out
