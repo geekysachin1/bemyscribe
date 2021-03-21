@@ -2,9 +2,15 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_restful import Api,Resource,request
+from flask_restful import Api,Resource,request, fields, marshal_with
 from werkzeug.security import generate_password_hash,check_password_hash
 from flask_jwt import JWT ,jwt_required
+from flask_apispec.views import MethodResource
+from marshmallow import Schema, fields
+from apispec import APISpec
+from apispec.ext.marshmallow import MarshmallowPlugin
+from flask_apispec.extension import FlaskApiSpec
+from flask_apispec import marshal_with, doc, use_kwargs
 
 database_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -17,7 +23,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 api = Api(app)
 migrate = Migrate(app,db)
-jwt = JWT(app, authenticate, identity)
+#jwt = JWT(app, authenticate, identity)
 
 # Creating a disabled persons table
 class Disabled(db.Model):
@@ -113,6 +119,53 @@ class Exam(db.Model):
 	def __repr__(self):
 		return f"Application ID: {self.id} ------ Disabled person ID: {self.disabled_id} ---- Volunteer ID: {self.volunteer_id}"
 
+##-----------Request/Response Scheema's for swagger
+class VounteerRequestSchema(Schema):
+    #api_type = fields.String(required=True, description="API type of be my scribe API")
+	name =  fields.String(required=True, description="API type of be my scribe API")
+	email = fields.String(required=True, description="API type of be my scribe API")
+	mobile = fields.String(required=True, description="API type of be my scribe API")
+	gender=fields.String(required=True, description="API type of be my scribe API")
+	city_town_village=fields.String(required=True, description="API type of be my scribe API")
+	state=fields.String(required=True, description="API type of be my scribe API")
+	pincode=fields.String(required=True, description="API type of be my scribe API")
+	language_1=fields.String(required=True, description="API type of be my scribe API")
+	language_2=fields.String(required=True, description="API type of be my scribe API")
+	language_3=fields.String(required=True, description="API type of be my scribe API")
+	highest_degree=fields.String(required=True, description="API type of be my scribe API")
+
+class VolunteerResponseSchema(Schema):
+	name =  fields.Str(default='Success')
+	email = fields.Str(default='Success')
+	mobile = fields.Str(default='Success')
+	gender=fields.Str(default='Success')
+	city_town_village=fields.Str(default='Success')
+	state=fields.Str(default='Success')
+	pincode=fields.Str(default='Success')
+	language_1=fields.Str(default='Success')
+	language_2=fields.Str(default='Success')
+	language_3=fields.Str(default='Success')
+	highest_degree=fields.Str(default='Success')
+
+class DisableResponseSchema(Schema):
+	name = fields.Str(default='Success')
+	email = fields.Str(default='Success')
+	mobile = fields.Str(default='Success')
+	exams = fields.Str(default='Success')
+	ratings = fields.Str(default='Success')
+	
+app.config.update({
+    'APISPEC_SPEC': APISpec(
+        title='Be My Scribe',
+        version='v1',
+        plugins=[MarshmallowPlugin()],
+        openapi_version='2.0.0'
+    ),
+    'APISPEC_SWAGGER_URL': '/swagger/',  # URI to access API Doc JSON 
+    'APISPEC_SWAGGER_UI_URL': '/swagger-ui/'  # URI to access UI of API Doc
+})
+
+
 # Creating Rating table
 class Volunteer_Rating(db.Model):
 	id = db.Column(db.Integer,primary_key=True)
@@ -133,6 +186,8 @@ class Volunteer_Rating(db.Model):
 	def __repr__(self):
 		return f"Feedback ID: {self.id} ------ Disabled person ID: {self.disabled_id} ---- Volunteer ID: {self.volunteer_id}"
 
+
+
 #disabledregister
 class DisabledRegister(Resource):
 	def post(self):
@@ -146,7 +201,10 @@ class DisabledRegister(Resource):
 		return disabled_user.json()
 
 #volunteerregister
-class VolunteerRegister(Resource):
+class VolunteerRegister(MethodResource, Resource):
+	@doc(description='Add new volunteer API.', tags=['Vounteer'])
+	@use_kwargs(VounteerRequestSchema, location=('json'))
+	@marshal_with(VolunteerResponseSchema)  # marshalling with marshmallow library
 	def post(self):
 		data = request.get_json()
 		name = data["name"]
@@ -167,8 +225,9 @@ class VolunteerRegister(Resource):
 		return volunteer_user.json()
 
 # Fetch user
-class DisabledResource(Resource):
-
+class DisabledResource(MethodResource, Resource):
+	@doc(description='Get disabled info API.', tags=['Disable'])
+	@marshal_with(DisableResponseSchema)  # marshalling with marshmallow library
 	def get(self,email):
 		disabled_user = Disabled.query.filter_by(email=email).first()
 		if disabled_user:
@@ -177,13 +236,19 @@ class DisabledResource(Resource):
 			return {'email':'not found'}, 404
 
 
+
 api.add_resource(DisabledResource,'/disabled/<string:email>')
 api.add_resource(DisabledRegister,'/disabledRegister')
 api.add_resource(VolunteerRegister,'/volunteerRegister')
 
+# Add newly created api to swagger docs
+docs = FlaskApiSpec(app)
+docs.register(DisabledResource)
+docs.register(VolunteerRegister)
+
 # Implementing JWT 
 def authenticate(email, password):
-	if bool(Disabled.query.filter_by(email = email).first())
+	if bool(Disabled.query.filter_by(email = email).first()):
 		user = Volunteer.query.filter_by(email = email).first()
 	else:
 		user = Disabled.query.filter_by(email = email).first()
