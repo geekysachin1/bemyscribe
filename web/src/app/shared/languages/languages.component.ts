@@ -16,7 +16,7 @@ export class LanguagesComponent implements OnInit {
   }
 
   onLangSelect(event) {
-    if(!event){
+    if(!event) {
       return;
     }
     this.langService.setLanguage(event.detail.value)

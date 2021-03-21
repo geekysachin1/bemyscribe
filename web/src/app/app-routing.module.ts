@@ -11,12 +11,20 @@ const routes: Routes = [
       loadChildren: () => import('./auth/login/login.module').then( m => m.LoginPageModule)
     },
     {
-      path: 'scribe-seeker',
+      path: 'registration/scribe-seeker',
       loadChildren: () => import('./auth/registration/scribe-seeker/scribe-seeker.module').then( m => m.ScribeSeekerPageModule)
     },
     {
-      path: 'scribe-volunteer',
+      path: 'registration/scribe-volunteer',
       loadChildren: () => import('./auth/registration/scribe-volunteer/scribe-volunteer.module').then( m => m.ScribeVolunteerPageModule)
+    },
+    {
+      path: 'scribe-volunteer',
+      loadChildren: () => import('./scribe-volunteer/scribe-volunteer.module').then( m => m.ScribeVolunteerPageModule)
+    },
+    {
+      path: 'scribe-seeker',
+      loadChildren: () => import('./scribe-seeker/scribe-seeker.module').then( m => m.ScribeSeekerPageModule)
     },
     {
       path: '',
