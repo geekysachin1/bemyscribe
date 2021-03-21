@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-back-button defaultHref="login"></ion-back-button>
   </ion-buttons>
     <ion-title>Volunteer Registration</ion-title>
   </ion-toolbar>
@@ -20,7 +20,7 @@
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col>
+          <ion-col size-sm="6" offset-sm="3">
             <ion-item>
               <ion-label position="floating">E-Mail</ion-label>
               <ion-input type="email" formControlName="email"></ion-input>
@@ -28,7 +28,7 @@
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col>
+          <ion-col size-sm="6" offset-sm="3">
             <ion-item>
               <ion-label position="floating">Gender</ion-label>
               <ion-select formControlName="gender">
@@ -40,7 +40,7 @@
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col>
+          <ion-col size-sm="6" offset-sm="3">
             <ion-item>
               <ion-label position="floating">Mobile Number</ion-label>
               <ion-input type="tel" formControlName="mobileno"></ion-input>
@@ -96,7 +96,7 @@
           </ion-col>
         </ion-row>
         <ion-row class="ion-justify-content-evenly">
-          <ion-col >
+          <ion-col size-sm="6" offset-sm="3">
             <ion-button type="reset" color="secondary" size="small" fill="outline">Reset</ion-button>
             <ion-button type="submit" color="primary" size="small">Register</ion-button>
           </ion-col>
