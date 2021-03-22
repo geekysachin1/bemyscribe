@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./scribe-volunteer.page.scss'],
 })
 export class ScribeVolunteerPage implements OnInit {
+  examList = [];
 
   constructor() { }
 

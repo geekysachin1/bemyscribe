@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./scribe-seeker.page.scss'],
 })
 export class ScribeSeekerPage implements OnInit {
+  examList = []; //  integrate with service
 
   constructor() { }
 
