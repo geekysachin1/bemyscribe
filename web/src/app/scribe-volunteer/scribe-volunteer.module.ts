@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { ScribeVolunteerPageRoutingModule } from './scribe-volunteer-routing.module';
 
 import { ScribeVolunteerPage } from './scribe-volunteer.page';
+import { ExamListComponent } from '../shared/exam-list/exam-list.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,9 @@ import { ScribeVolunteerPage } from './scribe-volunteer.page';
     IonicModule,
     ScribeVolunteerPageRoutingModule
   ],
-  declarations: [ScribeVolunteerPage]
+  declarations: [
+    ScribeVolunteerPage,
+    ExamListComponent
+  ]
 })
 export class ScribeVolunteerPageModule {}
