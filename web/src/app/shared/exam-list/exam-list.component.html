@@ -3,7 +3,7 @@
     <ion-label>Upcoming Exams</ion-label>
     <ion-input></ion-input>
   </ion-list-header>
-  <ion-item >
+  <ion-item *ngIf="examList.length">
     <ion-grid>
       <ion-row class="header">
         <ion-col class="header-col">Name</ion-col>
@@ -11,7 +11,7 @@
         <ion-col class="header-col">Time</ion-col>
         <ion-col class="header-col"></ion-col>
       </ion-row>
-      <ion-row class="content">
+      <ion-row class="content" *ngFor="let exam of examList">
         <ion-col>{{'test'}}</ion-col>
         <ion-col>{{'test'}}</ion-col>
         <ion-col>{{'test'}}</ion-col>
