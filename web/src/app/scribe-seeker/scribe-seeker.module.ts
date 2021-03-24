@@ -8,6 +8,7 @@ import { ScribeSeekerPageRoutingModule } from './scribe-seeker-routing.module';
 
 import { ScribeSeekerPage } from './scribe-seeker.page';
 import { ExamListComponent } from '../shared/exam-list/exam-list.component';
+import { FooterComponent } from '../shared/footer/footer.component';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { ExamListComponent } from '../shared/exam-list/exam-list.component';
   ],
   declarations: [
     ScribeSeekerPage,
-    ExamListComponent
+    ExamListComponent,
+    FooterComponent
   ]
 })
 export class ScribeSeekerPageModule {}
