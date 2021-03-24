@@ -4,6 +4,9 @@
 }
 .header, .content {
   font-size: 14px;
+  .button-wrapper {
+    line-height: 8px;
+  }
 }
 ion-button {
   text-transform: capitalize;

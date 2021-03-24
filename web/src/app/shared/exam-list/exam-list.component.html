@@ -11,11 +11,13 @@
         <ion-col class="header-col">Time</ion-col>
         <ion-col class="header-col"></ion-col>
       </ion-row>
-      <ion-row class="content" *ngFor="let exam of examList">
+      <ion-row class="content">
         <ion-col>{{'test'}}</ion-col>
         <ion-col>{{'test'}}</ion-col>
         <ion-col>{{'test'}}</ion-col>
-        <ion-col><ion-button href="#" fill="clear">Show More</ion-button></ion-col>
+        <ion-col class="button-wrapper">
+          <ion-button href="#" fill="clear" size="small">Show More</ion-button>
+        </ion-col>
       </ion-row>
     </ion-grid>
   </ion-item>
