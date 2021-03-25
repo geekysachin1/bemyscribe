@@ -102,6 +102,7 @@ class Exam(db.Model):
 	language_preference = db.Column(db.String(128))
 	disabled_id = db.Column(db.Integer,db.ForeignKey('disabled.id'))
 	volunteer_id = db.Column(db.Integer,db.ForeignKey('volunteer.id'))
+	exam_request_status = db.Column(db.String(64),default='open')
 	def __init__(self,exam_name,exam_date,exam_start_time,exam_end_time,exam_centre_addr,exam_city,exam_area_pincode,skills_preference,gender_preference,language_preference,disabled_id):
 		self.exam_name = exam_name	
 		self.exam_date = exam_date
@@ -114,8 +115,10 @@ class Exam(db.Model):
 		self.gender_preference = gender_preference
 		self.language_preference = language_preference
 		self.disabled_id = disabled_id
+
+
 	def json(self):
-		pass
+		return {"exam_name":self.exam_name,"exam_date":self.exam_date,"exam_start_time":self.exam_start_time,"exam_end_time":self.exam_end_time,"exam_centre_addr":self.exam_centre_addr,"exam_city":self.exam_city,"exam_area_pincode":self.exam_area_pincode}
 	def __repr__(self):
 		return f"Application ID: {self.id} ------ Disabled person ID: {self.disabled_id} ---- Volunteer ID: {self.volunteer_id}"
 
@@ -257,5 +260,24 @@ def authenticate(email, password):
 
 # identity function here
 
+
+# Creating a Get request for exam dashboard for Disabled
+class DisabledExamDashboard(Resource):
+	def get(self,email):
+		disabled_user = Disabled.query.filter_by(email = email).first()
+		id_of_disabled = disabled_user.id
+		exams_list = Exam.query.filter_by(disabled_id=id_of_disabled).all()
+		return [exam.json() for exam in exams_list]
+
+# Creating a Get request for exam dashboard for Volunteer
+class VolunteerExamDashboard(Resource):
+	def get(self,email):
+		volunteer_user = Volunteer.query.filter_by(email = email).first()
+		id_of_volunteer = volunteer_user.id
+		exams_list = Exam.query.filter((Exam.volunteer_id == id_of_volunteer) & (Exam.exam_request_status == "open")).all()
+		return [exam.json() for exam in exams_list]
+
+api.add_resource(DisabledExamDashboard,'/disabledExamDasshboard/<string:email>')
+api.add_resource(VolunteerExamDashboard,'/volunteerExamDasshboard/<string:email>')
 
 app.run(port=5000,debug=True)
