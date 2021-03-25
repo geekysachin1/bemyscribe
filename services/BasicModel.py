@@ -32,14 +32,14 @@ class Disabled(db.Model):
 	name = db.Column(db.Text)
 	email = db.Column(db.String(64),unique=True,index=True,nullable=False)
 	mobile = db.Column(db.Integer)
-	password_hash = db.Column(db.String(128))
+	password = db.Column(db.String(128))
 	exams = db.relationship('Exam',backref='Disabled',lazy='dynamic')
 	ratings = db.relationship('Volunteer_Rating',backref='Disabled',lazy='dynamic')
 	def __init__(self,name,email,mobile,password):
 		self.name =  name
 		self.email = email
 		self.mobile = mobile
-		self.password_hash = generate_password_hash(password)
+		self.password = password
 	def check_password(self,password):
 		return check_password_hash(self.password_hash,password)
 	def json(self):
@@ -54,7 +54,7 @@ class Volunteer(db.Model):
 	name = db.Column(db.Text)
 	email = db.Column(db.String(64),unique=True,index=True,nullable=False)
 	mobile = db.Column(db.Integer)
-	password_hash = db.Column(db.String(128))
+	password = db.Column(db.String(128))
 	gender = db.Column(db.String(20))
 	city_town_village = db.Column(db.String(128))
 	state = db.Column(db.String(64))
@@ -70,7 +70,7 @@ class Volunteer(db.Model):
 		self.name=name
 		self.email = email
 		self.mobile = mobile
-		self.password_hash = generate_password_hash(password)
+		self.password = password
 		self.gender = gender
 		self.city_town_village = city_town_village
 		self.state = state
