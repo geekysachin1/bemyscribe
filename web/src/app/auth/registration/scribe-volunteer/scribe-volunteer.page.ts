@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { RegistrationService } from '../registration.service';
+
+
 
 @Component({
   selector: 'app-scribe-volunteer',
@@ -8,7 +11,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class ScribeVolunteerPage implements OnInit {
   registrationForm: FormGroup;
-  constructor() { }
+
+  constructor(private regService: RegistrationService) { }
 
   ngOnInit() {
     this.registrationForm = new FormGroup({
@@ -18,6 +22,10 @@ export class ScribeVolunteerPage implements OnInit {
       email: new FormControl('', {
         validators: [Validators.required]
       }),
+      passwords: new FormGroup({
+          password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+          confirmPassword: new FormControl('', [Validators.required, Validators.minLength(8)])
+      }, {validators: this.regService.validatePasswordConformPassword}),
       gender: new FormControl('', {
         validators: [Validators.required]
       }),
@@ -42,5 +50,10 @@ export class ScribeVolunteerPage implements OnInit {
       }),
     });
   }
+
+  onRegistrationSubmission() {
+
+  }
+
 
 }
