@@ -41,7 +41,7 @@ class Disabled(db.Model):
 		self.mobile = mobile
 		self.password = password
 	def check_password(self,password):
-		return check_password_hash(self.password_hash,password)
+		return check_password_hash(self.password,password)
 	def json(self):
 		return {"name":self.name,"email":self.email,"mobile":self.mobile}
 	def __repr__(self):
@@ -80,7 +80,7 @@ class Volunteer(db.Model):
 		self.language_3 = language_3
 		self.highest_degree = highest_degree
 	def check_password(self,password):
-		return check_password_hash(self.password_hash,password)
+		return check_password_hash(self.password,password)
 	def json(self):
 		return {"name":self.name,"email":self.email,"mobile":self.mobile}
 	def __repr__(self):
@@ -100,9 +100,10 @@ class Exam(db.Model):
 	skills_preference = db.Column(db.Text)
 	gender_preference = db.Column(db.String(20))
 	language_preference = db.Column(db.String(128))
+	exam_request_status = db.Column(db.String(64),default='open')
 	disabled_id = db.Column(db.Integer,db.ForeignKey('disabled.id'))
 	volunteer_id = db.Column(db.Integer,db.ForeignKey('volunteer.id'))
-	exam_request_status = db.Column(db.String(64),default='open')
+	
 	def __init__(self,exam_name,exam_date,exam_start_time,exam_end_time,exam_centre_addr,exam_city,exam_area_pincode,skills_preference,gender_preference,language_preference,disabled_id):
 		self.exam_name = exam_name	
 		self.exam_date = exam_date
@@ -277,7 +278,7 @@ class VolunteerExamDashboard(Resource):
 		exams_list = Exam.query.filter((Exam.volunteer_id == id_of_volunteer) & (Exam.exam_request_status == "open")).all()
 		return [exam.json() for exam in exams_list]
 
-api.add_resource(DisabledExamDashboard,'/disabledExamDasshboard/<string:email>')
+api.add_resource(DisabledExamDashboard,'/disabledExamDasshboard/<email>')
 api.add_resource(VolunteerExamDashboard,'/volunteerExamDasshboard/<string:email>')
 
 app.run(port=5000,debug=True)
