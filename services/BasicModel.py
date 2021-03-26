@@ -278,7 +278,7 @@ class VolunteerExamDashboard(Resource):
 		exams_list = Exam.query.filter((Exam.volunteer_id == id_of_volunteer) & (Exam.exam_request_status == "open")).all()
 		return [exam.json() for exam in exams_list]
 
-api.add_resource(DisabledExamDashboard,'/disabledExamDasshboard/<email>')
-api.add_resource(VolunteerExamDashboard,'/volunteerExamDasshboard/<string:email>')
+api.add_resource(DisabledExamDashboard,'/disabledExamDashboard/<email>')
+api.add_resource(VolunteerExamDashboard,'/volunteerExamDashboard/<string:email>')
 
 app.run(port=5000,debug=True)
