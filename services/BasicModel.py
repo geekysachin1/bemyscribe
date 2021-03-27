@@ -91,7 +91,6 @@ class Volunteer(db.Model):
 # Creating application master table
 class Exam(db.Model):
 	id = db.Column(db.Integer,primary_key=True)
-
 	exam_name = db.Column(db.Text)
 	exam_date = db.Column(db.String(64))
 	exam_start_time = db.Column(db.String(64))
@@ -142,6 +141,20 @@ class VounteerRequestSchema(Schema):
 	language_3=fields.String(required=True, description="API type of be my scribe API")
 	highest_degree=fields.String(required=True, description="API type of be my scribe API")
 
+class ExamRequestSchema(Schema):
+	exam_name = fields.String(required=True, description="API type of be my scribe API")
+	exam_date = fields.String(required=True, description="API type of be my scribe API")
+	exam_start_time = fields.String(required=True, description="API type of be my scribe API")
+	exam_end_time = fields.String(required=True, description="API type of be my scribe API")
+	exam_centre_addr = fields.String(required=True, description="API type of be my scribe API")
+	exam_city = fields.String(required=True, description="API type of be my scribe API")
+	exam_area_pincode = fields.String(required=True, description="API type of be my scribe API")
+	skills_preference = fields.String(required=True, description="API type of be my scribe API")
+	gender_preference = fields.String(required=True, description="API type of be my scribe API")
+	language_preference = fields.String(required=True, description="API type of be my scribe API")
+	disabled_id = fields.String(required=True, description="API type of be my scribe API")
+	volunteer_id = fields.String(required=True, description="API type of be my scribe API")
+
 class VolunteerResponseSchema(Schema):
 	name =  fields.Str(default='Success')
 	email = fields.Str(default='Success')
@@ -161,6 +174,20 @@ class DisableResponseSchema(Schema):
 	mobile = fields.Str(default='Success')
 	exams = fields.Str(default='Success')
 	ratings = fields.Str(default='Success')
+
+class ExamResponseSchema(Schema):
+	exam_name = fields.Str(default='Success')
+	exam_date = fields.Str(default='Success')
+	exam_start_time = fields.Str(default='Success')
+	exam_end_time = fields.Str(default='Success')
+	exam_centre_addr = fields.Str(default='Success')
+	exam_city = fields.Str(default='Success')
+	exam_area_pincode = fields.Str(default='Success')
+	skills_preference = fields.Str(default='Success')
+	gender_preference = fields.Str(default='Success')
+	language_preference = fields.Str(default='Success')
+	disabled_id = fields.Str(default='Success')
+	volunteer_id = fields.Str(default='Success')
 	
 app.config.update({
     'APISPEC_SPEC': APISpec(
@@ -193,7 +220,6 @@ class Volunteer_Rating(db.Model):
 		pass
 	def __repr__(self):
 		return f"Feedback ID: {self.id} ------ Disabled person ID: {self.disabled_id} ---- Volunteer ID: {self.volunteer_id}"
-
 
 
 #disabledregister
@@ -244,7 +270,10 @@ class DisabledResource(MethodResource, Resource):
 			return {'email':'not found'}, 404
 
 #Create/Assign Exams
-class ExamApi(Resource):
+class ExamApi(MethodResource, Resource):
+	@doc(description='Add new exam API.', tags=['Exam'])
+	@use_kwargs(ExamRequestSchema, location=('json'))
+	@marshal_with(ExamResponseSchema)  # marshalling with marshmallow library
 	def post(self):
 		data = request.get_json()		
 		exam_name = data["exam_name"]
@@ -275,6 +304,7 @@ api.add_resource(ExamApi,'/saveExam')
 docs = FlaskApiSpec(app)
 docs.register(DisabledResource)
 docs.register(VolunteerRegister)
+docs.register(ExamApi)
 
 # Implementing JWT 
 def authenticate(email, password):
