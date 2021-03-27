@@ -1,3 +1,5 @@
+
+from werkzeug.security import safe_str_cmp
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -23,7 +25,24 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 api = Api(app)
 migrate = Migrate(app,db)
-#jwt = JWT(app, authenticate, identity)
+
+# Implementing JWT 
+def authenticate(email, password):
+	if bool(Disabled.query.filter_by(email = email).first()):
+		user = Disabled.query.filter_by(email = email).first()
+	else:
+		user = Volunteer.query.filter_by(email = email).first()
+		if user and safe_str_cmp(user.password, password):
+			return user
+# identity function here
+def identity(payload):
+	user_id = payload['identity']
+	if bool(Disabled.query.filter_by(id = user_id) ):
+		return Disabled.query.filter_by(id = user_id) 
+	else:
+		Volunteer.query.filter_by(id = user_id) 
+
+jwt = JWT(app, authenticate, identity)
 
 # Creating a disabled persons table
 class Disabled(db.Model):
@@ -129,13 +148,15 @@ class Exam(db.Model):
 ##-----------Request/Response Scheema's for swagger
 class VounteerRequestSchema(Schema):
     #api_type = fields.String(required=True, description="API type of be my scribe API")
+	
+	password=  fields.String(required=True, description="API type of be my scribe API")
 	name =  fields.String(required=True, description="API type of be my scribe API")
 	email = fields.String(required=True, description="API type of be my scribe API")
-	mobile = fields.String(required=True, description="API type of be my scribe API")
+	mobile = fields.Integer(required=True, description="API type of be my scribe API")
 	gender=fields.String(required=True, description="API type of be my scribe API")
 	city_town_village=fields.String(required=True, description="API type of be my scribe API")
 	state=fields.String(required=True, description="API type of be my scribe API")
-	pincode=fields.String(required=True, description="API type of be my scribe API")
+	pincode=fields.Integer(required=True, description="API type of be my scribe API")
 	language_1=fields.String(required=True, description="API type of be my scribe API")
 	language_2=fields.String(required=True, description="API type of be my scribe API")
 	language_3=fields.String(required=True, description="API type of be my scribe API")
@@ -156,6 +177,7 @@ class ExamRequestSchema(Schema):
 	volunteer_id = fields.String(required=True, description="API type of be my scribe API")
 
 class VolunteerResponseSchema(Schema):
+	password=  fields.Str(default='Success')
 	name =  fields.Str(default='Success')
 	email = fields.Str(default='Success')
 	mobile = fields.Str(default='Success')
@@ -229,7 +251,8 @@ class DisabledRegister(Resource):
 		name = data["name"]
 		email = data["email"]
 		mobile = data["mobile"]
-		disabled_user = Disabled(name=name,email=email,mobile=mobile)
+		password=data["password"]
+		disabled_user = Disabled(password=password,name=name,email=email,mobile=mobile)
 		db.session.add(disabled_user)
 		db.session.commit()
 		return disabled_user.json()
@@ -252,8 +275,9 @@ class VolunteerRegister(MethodResource, Resource):
 		language_2=data["language_2"]
 		language_3=data["language_3"]
 		highest_degree=data["highest_degree"]
+		password=data["password"]
 #		vol_status=data["vol_status"]
-		volunteer_user = Volunteer(name=name,email=email,mobile=mobile,gender=gender,city_town_village=city_town_village,state=state,pincode=pincode,language_1=language_1,language_2=language_2,language_3=language_3,highest_degree=highest_degree)
+		volunteer_user = Volunteer(password=password,name=name,email=email,mobile=mobile,gender=gender,city_town_village=city_town_village,state=state,pincode=pincode,language_1=language_1,language_2=language_2,language_3=language_3,highest_degree=highest_degree)
 		db.session.add(volunteer_user)
 		db.session.commit()
 		return volunteer_user.json()
@@ -306,20 +330,10 @@ docs.register(DisabledResource)
 docs.register(VolunteerRegister)
 docs.register(ExamApi)
 
-# Implementing JWT 
-def authenticate(email, password):
-	if bool(Disabled.query.filter_by(email = email).first()):
-		user = Volunteer.query.filter_by(email = email).first()
-	else:
-		user = Disabled.query.filter_by(email = email).first()
-	if user and user.check_password(password):
-		return user
-
-# identity function here
-
 
 # Creating a Get request for exam dashboard for Disabled
 class DisabledExamDashboard(Resource):
+	@jwt_required()
 	def get(self,email):
 		disabled_user = Disabled.query.filter_by(email = email).first()
 		id_of_disabled = disabled_user.id
@@ -328,6 +342,7 @@ class DisabledExamDashboard(Resource):
 
 # Creating a Get request for exam dashboard for Volunteer
 class VolunteerExamDashboard(Resource):
+	@jwt_required()
 	def get(self,email):
 		volunteer_user = Volunteer.query.filter_by(email = email).first()
 		id_of_volunteer = volunteer_user.id
