@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { RegistrationService } from '../registration.service';
+import { ValidationPopupComponent } from '../validation-popup/validation-popup.component';
 
 
 
@@ -52,8 +53,7 @@ export class ScribeVolunteerPage implements OnInit {
   }
 
   onRegistrationSubmission() {
-
+    this.regService.onSubmission(this.registrationForm);
   }
-
 
 }

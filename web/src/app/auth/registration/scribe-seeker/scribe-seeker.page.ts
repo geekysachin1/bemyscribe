@@ -37,6 +37,6 @@ export class ScribeSeekerPage implements OnInit {
   }
 
   onRegistrationSubmission() {
-
+    this.regService.onSubmission(this.registrationForm);
   }
 }
