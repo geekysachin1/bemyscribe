@@ -27,7 +27,6 @@ export class ValidationPopupComponent implements OnInit {
   constructor(private modalController: ModalController) { }
 
   ngOnInit() {
-    console.log(this.controls);
     for (const ctrl in this.controls) {
       const err = this.controls[ctrl].errors;
       err && err.required && (this.errors.push(`${this.ctrlMap[ctrl]} can't be blank.`))
@@ -39,7 +38,7 @@ export class ValidationPopupComponent implements OnInit {
         }
       }
     }
-
+    this.controls['passwords'].controls['password'].value !==  this.controls['passwords'].controls['confirmPassword'].value && this.errors.push(`Password and confirm password are not matching`)
   }
 
   onCancel() {

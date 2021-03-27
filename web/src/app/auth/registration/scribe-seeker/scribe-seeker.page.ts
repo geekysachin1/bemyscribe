@@ -23,9 +23,6 @@ export class ScribeSeekerPage implements OnInit {
         password: new FormControl('', [Validators.required, Validators.minLength(8)]),
         confirmPassword: new FormControl('', [Validators.required, Validators.minLength(8)])
       }, {validators: this.regService.validatePasswordConformPassword}),
-      confirmPassword: new FormControl('', {
-        validators: [Validators.required, Validators.minLength(8)]
-      }),
       gender: new FormControl('', {
         validators: [Validators.required]
       }),
