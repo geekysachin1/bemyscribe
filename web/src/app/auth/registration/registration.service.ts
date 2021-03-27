@@ -17,11 +17,14 @@ export class RegistrationService {
   }
 
   onSubmission(regForm) {
-    this.modalController.create({
-      component: ValidationPopupComponent,
-      componentProps: {controls: regForm.controls}
-    }).then(modalEl => {
-      modalEl.present();
-    });
+    if(!regForm.valid) {
+      this.modalController.create({
+        component: ValidationPopupComponent,
+        componentProps: {controls: regForm.controls}
+      }).then(modalEl => {
+        modalEl.present();
+      });
+    }
+
   }
 }
