@@ -20,11 +20,31 @@ Running the file
 List of api
 1. Request type: POST
   URL: localhost:5000/disabledRegister
-  sample data : 			{"name":"arun","email":"arunkumar629@gmail.com","mobile":8056018286}
+  sample data : 			{"password":"test","name":"arun","email":"arunkumar629@gmail.com","mobile":8056018286}
 
 2. request type : POST
   URL: localhost:5000/volunteerRegister
-  sample data: {"name":"arun","email":"arunkumar629@gmail.com","mobile":8056018286,"gender":"male","city_town_village":"chennnai","state":"tamilnadu","pincode":600103,"language_1":"tamil","language_2":"english","language_3":"none","highest_degree":"MCA"} 	
+  sample data: {"password":"test","name":"arun","email":"arunkumar629@gmail.com","mobile":8056018286,"gender":"male","city_town_village":"chennnai","state":"tamilnadu","pincode":600103,"language_1":"tamil","language_2":"english","language_3":"none","highest_degree":"MCA"} 	
+
+3. request type - post
+ URL localhost:5000/saveExam
+sample data: 
+    {
+        "exam_name": "tamil",
+        "exam_date": "31-12-2021",
+        "exam_start_time": "10:00",
+        "exam_end_time": "12:00",
+        "exam_centre_addr": "guindy high school",
+        "exam_city": "chennai",
+        "exam_area_pincode": 600042,
+        "skills_preference":"abc",
+        "gender_preference":"male",
+        "language_preference":"tamil",
+        "disabled_id":2,
+       "volunteer_id":1
+
+    }
+
 
 Swagger Integration for API Documentation/Testing
 ----------------------------------------------------

@@ -1,3 +1,5 @@
+
+from werkzeug.security import safe_str_cmp
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -23,7 +25,24 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 api = Api(app)
 migrate = Migrate(app,db)
-#jwt = JWT(app, authenticate, identity)
+
+# Implementing JWT 
+def authenticate(email, password):
+	if bool(Disabled.query.filter_by(email = email).first()):
+		user = Disabled.query.filter_by(email = email).first()
+	else:
+		user = Volunteer.query.filter_by(email = email).first()
+		if user and safe_str_cmp(user.password, password):
+			return user
+# identity function here
+def identity(payload):
+	user_id = payload['identity']
+	if bool(Disabled.query.filter_by(id = user_id) ):
+		return Disabled.query.filter_by(id = user_id) 
+	else:
+		Volunteer.query.filter_by(id = user_id) 
+
+jwt = JWT(app, authenticate, identity)
 
 # Creating a disabled persons table
 class Disabled(db.Model):
@@ -91,7 +110,6 @@ class Volunteer(db.Model):
 # Creating application master table
 class Exam(db.Model):
 	id = db.Column(db.Integer,primary_key=True)
-
 	exam_name = db.Column(db.Text)
 	exam_date = db.Column(db.String(64))
 	exam_start_time = db.Column(db.String(64))
@@ -108,7 +126,7 @@ class Exam(db.Model):
 	disabled_id = db.Column(db.String(255)) #db.Column(db.Integer,db.ForeignKey('disabled.id'))
 	volunteer_id = db.Column(db.String(255)) #db.Column(db.Integer,db.ForeignKey('volunteer.id'))
 	#status =  db.Column(db.String(10))
-	def __init__(self,exam_name,exam_date,exam_start_time,exam_end_time,exam_centre_addr,exam_city,exam_area_pincode,skills_preference,gender_preference,language_preference,disabled_id,volunteer_id):
+	def __init__(self,exam_name,exam_date,exam_start_time,exam_end_time,exam_centre_addr,exam_city,exam_area_pincode,skills_preference,gender_preference,language_preference,disabled_id):
 		self.exam_name = exam_name	
 		self.exam_date = exam_date
 		self.exam_start_time = exam_start_time
@@ -120,7 +138,7 @@ class Exam(db.Model):
 		self.gender_preference = gender_preference
 		self.language_preference = language_preference
 		self.disabled_id = disabled_id
-		self.volunteer_id = volunteer_id
+		#self.volunteer_id = volunteer_id
 		#self.status = "Active"
 	def json(self):
 		return {"exam_name":self.exam_name,"exam_date":self.exam_date,"exam_start_time":self.exam_start_time,"exam_end_time":self.exam_end_time,"exam_centre_addr":self.exam_centre_addr,"exam_city":self.exam_city,"exam_area_pincode":self.exam_area_pincode}
@@ -130,19 +148,36 @@ class Exam(db.Model):
 ##-----------Request/Response Scheema's for swagger
 class VounteerRequestSchema(Schema):
     #api_type = fields.String(required=True, description="API type of be my scribe API")
+	
+	password=  fields.String(required=True, description="API type of be my scribe API")
 	name =  fields.String(required=True, description="API type of be my scribe API")
 	email = fields.String(required=True, description="API type of be my scribe API")
-	mobile = fields.String(required=True, description="API type of be my scribe API")
+	mobile = fields.Integer(required=True, description="API type of be my scribe API")
 	gender=fields.String(required=True, description="API type of be my scribe API")
 	city_town_village=fields.String(required=True, description="API type of be my scribe API")
 	state=fields.String(required=True, description="API type of be my scribe API")
-	pincode=fields.String(required=True, description="API type of be my scribe API")
+	pincode=fields.Integer(required=True, description="API type of be my scribe API")
 	language_1=fields.String(required=True, description="API type of be my scribe API")
 	language_2=fields.String(required=True, description="API type of be my scribe API")
 	language_3=fields.String(required=True, description="API type of be my scribe API")
 	highest_degree=fields.String(required=True, description="API type of be my scribe API")
 
+class ExamRequestSchema(Schema):
+	exam_name = fields.String(required=True, description="API type of be my scribe API")
+	exam_date = fields.String(required=True, description="API type of be my scribe API")
+	exam_start_time = fields.String(required=True, description="API type of be my scribe API")
+	exam_end_time = fields.String(required=True, description="API type of be my scribe API")
+	exam_centre_addr = fields.String(required=True, description="API type of be my scribe API")
+	exam_city = fields.String(required=True, description="API type of be my scribe API")
+	exam_area_pincode = fields.String(required=True, description="API type of be my scribe API")
+	skills_preference = fields.String(required=True, description="API type of be my scribe API")
+	gender_preference = fields.String(required=True, description="API type of be my scribe API")
+	language_preference = fields.String(required=True, description="API type of be my scribe API")
+	disabled_id = fields.String(required=True, description="API type of be my scribe API")
+	volunteer_id = fields.String(required=True, description="API type of be my scribe API")
+
 class VolunteerResponseSchema(Schema):
+	password=  fields.Str(default='Success')
 	name =  fields.Str(default='Success')
 	email = fields.Str(default='Success')
 	mobile = fields.Str(default='Success')
@@ -161,6 +196,20 @@ class DisableResponseSchema(Schema):
 	mobile = fields.Str(default='Success')
 	exams = fields.Str(default='Success')
 	ratings = fields.Str(default='Success')
+
+class ExamResponseSchema(Schema):
+	exam_name = fields.Str(default='Success')
+	exam_date = fields.Str(default='Success')
+	exam_start_time = fields.Str(default='Success')
+	exam_end_time = fields.Str(default='Success')
+	exam_centre_addr = fields.Str(default='Success')
+	exam_city = fields.Str(default='Success')
+	exam_area_pincode = fields.Str(default='Success')
+	skills_preference = fields.Str(default='Success')
+	gender_preference = fields.Str(default='Success')
+	language_preference = fields.Str(default='Success')
+	disabled_id = fields.Str(default='Success')
+	volunteer_id = fields.Str(default='Success')
 	
 app.config.update({
     'APISPEC_SPEC': APISpec(
@@ -195,7 +244,6 @@ class Volunteer_Rating(db.Model):
 		return f"Feedback ID: {self.id} ------ Disabled person ID: {self.disabled_id} ---- Volunteer ID: {self.volunteer_id}"
 
 
-
 #disabledregister
 class DisabledRegister(Resource):
 	def post(self):
@@ -203,7 +251,8 @@ class DisabledRegister(Resource):
 		name = data["name"]
 		email = data["email"]
 		mobile = data["mobile"]
-		disabled_user = Disabled(name=name,email=email,mobile=mobile)
+		password=data["password"]
+		disabled_user = Disabled(password=password,name=name,email=email,mobile=mobile)
 		db.session.add(disabled_user)
 		db.session.commit()
 		return disabled_user.json()
@@ -226,8 +275,9 @@ class VolunteerRegister(MethodResource, Resource):
 		language_2=data["language_2"]
 		language_3=data["language_3"]
 		highest_degree=data["highest_degree"]
+		password=data["password"]
 #		vol_status=data["vol_status"]
-		volunteer_user = Volunteer(name=name,email=email,mobile=mobile,gender=gender,city_town_village=city_town_village,state=state,pincode=pincode,language_1=language_1,language_2=language_2,language_3=language_3,highest_degree=highest_degree)
+		volunteer_user = Volunteer(password=password,name=name,email=email,mobile=mobile,gender=gender,city_town_village=city_town_village,state=state,pincode=pincode,language_1=language_1,language_2=language_2,language_3=language_3,highest_degree=highest_degree)
 		db.session.add(volunteer_user)
 		db.session.commit()
 		return volunteer_user.json()
@@ -244,7 +294,10 @@ class DisabledResource(MethodResource, Resource):
 			return {'email':'not found'}, 404
 
 #Create/Assign Exams
-class ExamApi(Resource):
+class ExamApi(MethodResource, Resource):
+	@doc(description='Add new exam API.', tags=['Exam'])
+	@use_kwargs(ExamRequestSchema, location=('json'))
+	@marshal_with(ExamResponseSchema)  # marshalling with marshmallow library
 	def post(self):
 		data = request.get_json()		
 		exam_name = data["exam_name"]
@@ -275,21 +328,12 @@ api.add_resource(ExamApi,'/saveExam')
 docs = FlaskApiSpec(app)
 docs.register(DisabledResource)
 docs.register(VolunteerRegister)
-
-# Implementing JWT 
-def authenticate(email, password):
-	if bool(Disabled.query.filter_by(email = email).first()):
-		user = Volunteer.query.filter_by(email = email).first()
-	else:
-		user = Disabled.query.filter_by(email = email).first()
-	if user and user.check_password(password):
-		return user
-
-# identity function here
+docs.register(ExamApi)
 
 
 # Creating a Get request for exam dashboard for Disabled
 class DisabledExamDashboard(Resource):
+	@jwt_required()
 	def get(self,email):
 		disabled_user = Disabled.query.filter_by(email = email).first()
 		id_of_disabled = disabled_user.id
@@ -298,6 +342,7 @@ class DisabledExamDashboard(Resource):
 
 # Creating a Get request for exam dashboard for Volunteer
 class VolunteerExamDashboard(Resource):
+	@jwt_required()
 	def get(self,email):
 		volunteer_user = Volunteer.query.filter_by(email = email).first()
 		id_of_volunteer = volunteer_user.id
