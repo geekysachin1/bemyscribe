@@ -3,10 +3,13 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="login"></ion-back-button>
     </ion-buttons>
-    <ion-title>Scribe Volunteer</ion-title>
+    <ion-title>Dashboard</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-card>
+    <app-exam-list [examList]="examList"></app-exam-list>
+  </ion-card>
 </ion-content>
+<app-footer></app-footer>

@@ -7,6 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { ScribeSeekerPageRoutingModule } from './scribe-seeker-routing.module';
 
 import { ScribeSeekerPage } from './scribe-seeker.page';
+import { ExamListComponent } from '../shared/exam-list/exam-list.component';
+import { FooterComponent } from '../shared/footer/footer.component';
 
 @NgModule({
   imports: [
@@ -15,6 +17,10 @@ import { ScribeSeekerPage } from './scribe-seeker.page';
     IonicModule,
     ScribeSeekerPageRoutingModule
   ],
-  declarations: [ScribeSeekerPage]
+  declarations: [
+    ScribeSeekerPage,
+    ExamListComponent,
+    FooterComponent
+  ]
 })
 export class ScribeSeekerPageModule {}
