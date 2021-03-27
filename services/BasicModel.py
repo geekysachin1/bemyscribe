@@ -32,13 +32,10 @@ class Disabled(db.Model):
 	name = db.Column(db.Text)
 	email = db.Column(db.String(64),unique=True,index=True,nullable=False)
 	mobile = db.Column(db.Integer)
-<<<<<<< HEAD
 	password = db.Column(db.String(128))
 	exams = db.relationship('Exam',backref='Disabled',lazy='dynamic')
-=======
 	password_hash = db.Column(db.String(128))
 	#exams = db.relationship('Exam',backref='Disabled',lazy='dynamic')
->>>>>>> c1f6c2d380724241c194b948e99a48f3a41d7b6e
 	ratings = db.relationship('Volunteer_Rating',backref='Disabled',lazy='dynamic')
 	def __init__(self,name,email,mobile,password):
 		self.name =  name
@@ -105,18 +102,13 @@ class Exam(db.Model):
 	skills_preference = db.Column(db.Text)
 	gender_preference = db.Column(db.String(20))
 	language_preference = db.Column(db.String(128))
-<<<<<<< HEAD
 	exam_request_status = db.Column(db.String(64),default='open')
 	disabled_id = db.Column(db.Integer,db.ForeignKey('disabled.id'))
 	volunteer_id = db.Column(db.Integer,db.ForeignKey('volunteer.id'))
-	
-	def __init__(self,exam_name,exam_date,exam_start_time,exam_end_time,exam_centre_addr,exam_city,exam_area_pincode,skills_preference,gender_preference,language_preference,disabled_id):
-=======
 	disabled_id = db.Column(db.String(255)) #db.Column(db.Integer,db.ForeignKey('disabled.id'))
 	volunteer_id = db.Column(db.String(255)) #db.Column(db.Integer,db.ForeignKey('volunteer.id'))
 	#status =  db.Column(db.String(10))
 	def __init__(self,exam_name,exam_date,exam_start_time,exam_end_time,exam_centre_addr,exam_city,exam_area_pincode,skills_preference,gender_preference,language_preference,disabled_id,volunteer_id):
->>>>>>> c1f6c2d380724241c194b948e99a48f3a41d7b6e
 		self.exam_name = exam_name	
 		self.exam_date = exam_date
 		self.exam_start_time = exam_start_time
@@ -128,13 +120,8 @@ class Exam(db.Model):
 		self.gender_preference = gender_preference
 		self.language_preference = language_preference
 		self.disabled_id = disabled_id
-<<<<<<< HEAD
-
-
-=======
 		self.volunteer_id = volunteer_id
 		#self.status = "Active"
->>>>>>> c1f6c2d380724241c194b948e99a48f3a41d7b6e
 	def json(self):
 		return {"exam_name":self.exam_name,"exam_date":self.exam_date,"exam_start_time":self.exam_start_time,"exam_end_time":self.exam_end_time,"exam_centre_addr":self.exam_centre_addr,"exam_city":self.exam_city,"exam_area_pincode":self.exam_area_pincode}
 	def __repr__(self):
