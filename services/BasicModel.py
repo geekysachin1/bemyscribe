@@ -141,7 +141,7 @@ class Exam(db.Model):
 		self.volunteer_id = volunteer_id
 		#self.status = "Active"
 	def json(self):
-		return {"exam_name":self.exam_name,"exam_date":self.exam_date,"exam_start_time":self.exam_start_time,"exam_end_time":self.exam_end_time,"exam_centre_addr":self.exam_centre_addr,"exam_city":self.exam_city,"exam_area_pincode":self.exam_area_pincode}
+		return {"disabled_id":self.disabled_id,"name":(Disabled.query.get(self.disabled_id)).name,"exam_name":self.exam_name,"exam_date":self.exam_date,"exam_start_time":self.exam_start_time,"exam_end_time":self.exam_end_time,"exam_centre_addr":self.exam_centre_addr,"exam_city":self.exam_city,"exam_area_pincode":self.exam_area_pincode,"exam_request_status":self.exam_request_status}
 	def __repr__(self):
 		return f"Application ID: {self.id} ------ Disabled person ID: {self.disabled_id} ---- Volunteer ID: {self.volunteer_id}"
 
@@ -331,6 +331,18 @@ docs.register(DisabledResource)
 #docs.register(ExamApi)
 
 
+#exam dasboard get request
+class ExamDashboard(Resource):
+	@jwt_required()
+	def get(self,email):
+		if bool(Disabled.query.filter_by(email = email).first()):
+			return "disabled"
+		else:
+			return"volunteer"
+
+
+api.add_resource(ExamDashboard,'/examDashboard/<email>')
+
 # Creating a Get request for exam dashboard for Disabled
 class DisabledExamDashboard(Resource):
 	@jwt_required()
@@ -347,9 +359,13 @@ class VolunteerExamDashboard(Resource):
 		volunteer_user = Volunteer.query.filter_by(email = email).first()
 		id_of_volunteer = volunteer_user.id
 		exams_list = Exam.query.filter((Exam.volunteer_id == id_of_volunteer) & (Exam.exam_request_status == "open")).all()
+		name_json = {}
+
 		return [exam.json() for exam in exams_list]
 
 api.add_resource(DisabledExamDashboard,'/disabledExamDashboard/<email>')
 api.add_resource(VolunteerExamDashboard,'/volunteerExamDashboard/<string:email>')
+
+
 
 app.run(port=5000,debug=True)
