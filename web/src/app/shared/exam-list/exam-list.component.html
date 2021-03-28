@@ -26,13 +26,13 @@
           </ion-row>
           <ion-row class="section-footer">
             <ion-col class="button-wrapper">
-              <ion-button type="button" fill="clear" size="small">
+              <ion-button type="button" fill="clear" size="small" (click)="onShowMoreBtnClick(exam.ID)">
                 <ion-icon name="eye-outline" class="icon"></ion-icon>Show More
               </ion-button>
               <ion-button type="button" fill="clear" size="small" *ngIf="showEditBtn">
                 <ion-icon name="create-outline" class="icon"></ion-icon>Edit
               </ion-button>
-              <ion-button type="button" fill="clear" size="small" *ngIf="showDeleteBtn" (click)="showConfirm(exam.ID)">
+              <ion-button type="button" fill="clear" size="small" *ngIf="showDeleteBtn" (click)="onShowConfirm(exam.ID)">
                 <ion-icon name="trash-outline" class="icon"></ion-icon>Delete
               </ion-button>
               <ion-button type="button" fill="clear" size="small" *ngIf="showAcceptBtn">
