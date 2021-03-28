@@ -1,9 +1,59 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{'exaam name'}}</ion-title>
+    <ion-title>{{'Test Exam'}}</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button type="button" aria-label="Close" (click)="onCloseBtnClick()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-card>
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="5">
+            Exam Location Address
+          </ion-col>
+          <ion-col>
+           {{' Exam Location Address Exam Location Address Exam Location Address'}}
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="5">
+            Exam City
+          </ion-col>
+          <ion-col>
+            {{'Exam City'}}
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="5">
+            Exam Date
+          </ion-col>
+          <ion-col>
+            {{'Exam Date'}}
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="5">
+            Exam Time
+          </ion-col>
+          <ion-col>
+           {{' Exam Time'}}
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="5">
+            Skills Expected From Volunteer
+          </ion-col>
+          <ion-col>
+            {{'Skills Expected From Volunteer Skills Expected From Volunteer'}}
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-card>
 </ion-content>

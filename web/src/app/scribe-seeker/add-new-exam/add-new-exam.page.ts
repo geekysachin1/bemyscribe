@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalService } from 'src/app/shared/modal.service';
-import { ValidationPopupComponent } from 'src/app/shared/validation-popup/validation-popup.component';
+import { ValidationPopupComponent } from '../../shared/validation-popup/validation-popup.component';
 
 @Component({
   selector: 'app-add-new-exam',
