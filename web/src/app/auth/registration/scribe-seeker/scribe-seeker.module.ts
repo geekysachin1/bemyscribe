@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { ScribeSeekerPageRoutingModule } from './scribe-seeker-routing.module';
 import { ScribeSeekerPage } from './scribe-seeker.page';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { ValidationPopupComponent } from '../validation-popup/validation-popup.component';
+import { ValidationPopupComponent } from '../../../shared/validation-popup/validation-popup.component';
 
 @NgModule({
   imports: [
@@ -12,6 +12,7 @@ import { ValidationPopupComponent } from '../validation-popup/validation-popup.c
   ],
   declarations: [
     ScribeSeekerPage,
-    ValidationPopupComponent]
+    ValidationPopupComponent
+  ]
 })
 export class ScribeSeekerPageModule {}

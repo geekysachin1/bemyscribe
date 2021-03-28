@@ -20,8 +20,15 @@ export class ValidationPopupComponent implements OnInit {
     'languagesKnown': 'Languages Known',
     'city': 'City',
     'state' :'State',
-    'pincode': 'Pincode'
+    'pincode': 'Pincode',
+    'examName':'Exam Name',
+    'address': 'Exam Location Address',
+    'examCity': 'Exam City',
+    'date':'Exam Date',
+    'time':'Exam Time',
+    'skills': 'Skills Expected From Volunteer'
   };
+
   errors: any[] = [];
 
   constructor(private modalController: ModalController) { }

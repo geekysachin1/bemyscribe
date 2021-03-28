@@ -9,7 +9,7 @@
 
 <ion-content>
   <ion-card>
-    <form [formGroup]="addNewExamForm">
+    <form [formGroup]="addNewExamForm" (ngSubmit)="onAddExamSubmission()">
       <ion-grid>
         <ion-row>
           <ion-col size-sm="6" offset-sm="3">
@@ -31,7 +31,7 @@
           <ion-col size-sm="6" offset-sm="3">
             <ion-item>
               <ion-label position="floating">Exam City</ion-label>
-              <ion-input formControlName="city"></ion-input>
+              <ion-input formControlName="examCity"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
