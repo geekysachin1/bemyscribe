@@ -31,6 +31,10 @@ const routes: Routes = [
       redirectTo: 'home',
       pathMatch: 'full'
     },
+    {
+      path: '**',
+      loadChildren: () => import('./page-not-found/page-not-found.module').then( m => m.PageNotFoundPageModule)
+    },
 ];
 
 @NgModule({
