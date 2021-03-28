@@ -1,4 +1,4 @@
-
+from flask_cors import CORS
 from werkzeug.security import safe_str_cmp
 import os
 from flask import Flask
@@ -17,7 +17,7 @@ from flask_apispec import marshal_with, doc, use_kwargs
 database_dir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
-
+CORS(app)
 app.config['SECRET_KEY'] = 'mykeyishere'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(database_dir, 'data.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
