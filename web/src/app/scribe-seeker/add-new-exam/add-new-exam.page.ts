@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ModalService } from 'src/app/shared/modal.service';
+import { ValidationPopupComponent } from 'src/app/shared/validation-popup/validation-popup.component';
 
 @Component({
   selector: 'app-add-new-exam',
@@ -9,7 +11,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class AddNewExamPage implements OnInit {
   addNewExamForm: FormGroup;
 
-  constructor() { }
+  constructor(private modalServe: ModalService) { }
 
   ngOnInit() {
     this.addNewExamForm = new FormGroup({
@@ -19,7 +21,7 @@ export class AddNewExamPage implements OnInit {
       address: new FormControl('', {
         validators: [Validators.required]
       }),
-      city: new FormControl('', {
+      examCity: new FormControl('', {
         validators: [Validators.required]
       }),
       date: new FormControl('', {
@@ -32,4 +34,9 @@ export class AddNewExamPage implements OnInit {
     });
   }
 
+  onAddExamSubmission(){
+    if(!this.addNewExamForm.valid) {
+      this.modalServe.presentModal(ValidationPopupComponent, {controls: this.addNewExamForm.controls});
+    }
+  }
 }

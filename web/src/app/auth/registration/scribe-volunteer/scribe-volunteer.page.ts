@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { RegistrationService } from '../registration.service';
-import { ValidationPopupComponent } from '../validation-popup/validation-popup.component';
+import { ValidationPopupComponent } from '../../../shared/validation-popup/validation-popup.component';
 
 
 
