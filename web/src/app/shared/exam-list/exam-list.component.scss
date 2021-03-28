@@ -1,16 +1,15 @@
-.header {
-  border-bottom: 1px solid var(--ion-color-primary);
-
-}
-.header, .content {
-  font-size: 14px;
-  .button-wrapper {
-    line-height: 8px;
-  }
-}
 ion-button {
   text-transform: capitalize;
   margin: 0;
   padding: 0;
   font-size: 12px;
+}
+
+.icon {
+  margin-right: 3px;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: flex-end;
 }
