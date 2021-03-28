@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
-import { ValidationPopupComponent } from './validation-popup/validation-popup.component';
+import { ModalService } from 'src/app/shared/modal.service';
+import { ValidationPopupComponent } from '../../shared/validation-popup/validation-popup.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RegistrationService {
 
-  constructor( public modalController: ModalController) { }
+  constructor(private modalService: ModalService ) { }
 
   validatePasswordConformPassword(c: AbstractControl): { invalid: boolean } {
     if (c.get('password').value !== c.get('confirmPassword').value) {
@@ -18,12 +19,7 @@ export class RegistrationService {
 
   onSubmission(regForm) {
     if(!regForm.valid) {
-      this.modalController.create({
-        component: ValidationPopupComponent,
-        componentProps: {controls: regForm.controls}
-      }).then(modalEl => {
-        modalEl.present();
-      });
+      this.modalService.presentModal(ValidationPopupComponent, {controls: regForm.controls})
     }
 
   }
