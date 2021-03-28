@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-exam-list',
@@ -12,8 +13,30 @@ export class ExamListComponent implements OnInit {
   @Input() showAcceptBtn: boolean;
   @Input() showSeekerDetails: boolean;
 
-  constructor() { }
+  constructor(public alertController: AlertController) { }
 
   ngOnInit() {}
+
+  showConfirm(examID) {
+    this.alertController.create({
+      header: 'Delete Exam',
+      message: 'Are you sure that you want to delete this exam?',
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Yes',
+          handler: (examID) => {
+            //Service call to delete exam
+          }
+        }
+      ]
+    }).then(res => {
+      res.present();
+    });
+  }
 
 }

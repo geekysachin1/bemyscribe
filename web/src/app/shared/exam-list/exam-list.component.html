@@ -32,7 +32,7 @@
               <ion-button type="button" fill="clear" size="small" *ngIf="showEditBtn">
                 <ion-icon name="create-outline" class="icon"></ion-icon>Edit
               </ion-button>
-              <ion-button type="button" fill="clear" size="small" *ngIf="showDeleteBtn">
+              <ion-button type="button" fill="clear" size="small" *ngIf="showDeleteBtn" (click)="showConfirm(exam.ID)">
                 <ion-icon name="trash-outline" class="icon"></ion-icon>Delete
               </ion-button>
               <ion-button type="button" fill="clear" size="small" *ngIf="showAcceptBtn">
