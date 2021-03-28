@@ -1,4 +1,4 @@
-from flask_cors import CORS
+
 from werkzeug.security import safe_str_cmp
 import os
 from flask import Flask
@@ -17,7 +17,7 @@ from flask_apispec import marshal_with, doc, use_kwargs
 database_dir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
-CORS(app)
+
 app.config['SECRET_KEY'] = 'mykeyishere'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(database_dir, 'data.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -126,7 +126,7 @@ class Exam(db.Model):
 	disabled_id = db.Column(db.String(255)) #db.Column(db.Integer,db.ForeignKey('disabled.id'))
 	volunteer_id = db.Column(db.String(255)) #db.Column(db.Integer,db.ForeignKey('volunteer.id'))
 	#status =  db.Column(db.String(10))
-	def __init__(self,exam_name,exam_date,exam_start_time,exam_end_time,exam_centre_addr,exam_city,exam_area_pincode,skills_preference,gender_preference,language_preference,disabled_id):
+	def __init__(self,exam_name,exam_date,exam_start_time,exam_end_time,exam_centre_addr,exam_city,exam_area_pincode,skills_preference,gender_preference,language_preference,disabled_id,volunteer_id):
 		self.exam_name = exam_name	
 		self.exam_date = exam_date
 		self.exam_start_time = exam_start_time
@@ -138,7 +138,7 @@ class Exam(db.Model):
 		self.gender_preference = gender_preference
 		self.language_preference = language_preference
 		self.disabled_id = disabled_id
-		#self.volunteer_id = volunteer_id
+		self.volunteer_id = volunteer_id
 		#self.status = "Active"
 	def json(self):
 		return {"exam_name":self.exam_name,"exam_date":self.exam_date,"exam_start_time":self.exam_start_time,"exam_end_time":self.exam_end_time,"exam_centre_addr":self.exam_centre_addr,"exam_city":self.exam_city,"exam_area_pincode":self.exam_area_pincode}
@@ -258,10 +258,10 @@ class DisabledRegister(Resource):
 		return disabled_user.json()
 
 #volunteerregister
-class VolunteerRegister(MethodResource, Resource):
-	@doc(description='Add new volunteer API.', tags=['Vounteer'])
-	@use_kwargs(VounteerRequestSchema, location=('json'))
-	@marshal_with(VolunteerResponseSchema)  # marshalling with marshmallow library
+class VolunteerRegister(Resource):
+	#@doc(description='Add new volunteer API.', tags=['Vounteer'])
+	#@use_kwargs(VounteerRequestSchema, location=('json'))
+	#@marshal_with(VolunteerResponseSchema)  # marshalling with marshmallow library
 	def post(self):
 		data = request.get_json()
 		name = data["name"]
@@ -294,10 +294,10 @@ class DisabledResource(MethodResource, Resource):
 			return {'email':'not found'}, 404
 
 #Create/Assign Exams
-class ExamApi(MethodResource, Resource):
-	@doc(description='Add new exam API.', tags=['Exam'])
-	@use_kwargs(ExamRequestSchema, location=('json'))
-	@marshal_with(ExamResponseSchema)  # marshalling with marshmallow library
+class ExamApi(Resource):
+	#@doc(description='Add new exam API.', tags=['Exam'])
+	#@use_kwargs(ExamRequestSchema, location=('json'))
+	#@marshal_with(ExamResponseSchema)  # marshalling with marshmallow library
 	def post(self):
 		data = request.get_json()		
 		exam_name = data["exam_name"]
@@ -327,8 +327,8 @@ api.add_resource(ExamApi,'/saveExam')
 # Add newly created api to swagger docs
 docs = FlaskApiSpec(app)
 docs.register(DisabledResource)
-docs.register(VolunteerRegister)
-docs.register(ExamApi)
+#docs.register(VolunteerRegister)
+#docs.register(ExamApi)
 
 
 # Creating a Get request for exam dashboard for Disabled
