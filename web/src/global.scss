@@ -25,6 +25,10 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+* {
+  --ion-font-family: 'Quicksand', sans-serif;
+}
+
 ion-content {
   --background: url('./assets/images/background.png') 0 0/100% 100% no-repeat;
 }
