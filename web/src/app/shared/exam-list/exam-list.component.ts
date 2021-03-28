@@ -7,6 +7,10 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ExamListComponent implements OnInit {
   @Input() examList: any[];
+  @Input() showEditBtn: boolean;
+  @Input() showDeleteBtn: boolean;
+  @Input() showAcceptBtn: boolean;
+  @Input() showSeekerDetails: boolean;
 
   constructor() { }
 
