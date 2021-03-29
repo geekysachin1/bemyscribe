@@ -300,6 +300,7 @@ class ExamApi(Resource):
 	#@marshal_with(ExamResponseSchema)  # marshalling with marshmallow library
 	def post(self):
 		data = request.get_json()		
+		exam_id = data["id"]	
 		exam_name = data["exam_name"]
 		exam_date = data["exam_date"]
 		exam_start_time = data["exam_start_time"]
@@ -311,12 +312,22 @@ class ExamApi(Resource):
 		gender_preference = data["gender_preference"]
 		language_preference = data["language_preference"]
 		disabled_id = data["disabled_id"]
-		volunteer_id = data["volunteer_id"]
+		volunteer_id = data["volunteer_id"]		
 
-		exam = Exam(exam_name = exam_name,exam_date = exam_date,exam_start_time = exam_start_time,exam_end_time = exam_end_time,exam_centre_addr = exam_centre_addr,exam_city = exam_city,exam_area_pincode = exam_area_pincode,skills_preference = skills_preference,gender_preference = gender_preference,language_preference = language_preference,disabled_id = disabled_id,volunteer_id = volunteer_id)
-		db.session.add(exam)
-		db.session.commit()		
-		return exam.json()
+		if(exam_id > 0  and len(volunteer_id) > 0):
+			examToUpdate = Exam.query.filter_by(id = int(exam_id))
+			examToUpdate.volunteer_id = volunteer_id
+			examToUpdate.exam_request_status = "in progress"
+			#db.session.merge(examToUpdate)
+			db.session.commit()
+			return "Exam assigned successfully"
+		else:
+			volunteer_id = None
+			status = "open"
+			exam = Exam(exam_name = exam_name,exam_date = exam_date,exam_start_time = exam_start_time,exam_end_time = exam_end_time,exam_centre_addr = exam_centre_addr,exam_city = exam_city,exam_area_pincode = exam_area_pincode,skills_preference = skills_preference,gender_preference = gender_preference,language_preference = language_preference,disabled_id = disabled_id,volunteer_id = volunteer_id, exam_request_status = status)
+			db.session.add(exam)
+			db.session.commit()
+			return exam.json()
 
 
 api.add_resource(DisabledResource,'/disabled/<string:email>')
@@ -358,7 +369,7 @@ class VolunteerExamDashboard(Resource):
 	def get(self,email):
 		volunteer_user = Volunteer.query.filter_by(email = email).first()
 		id_of_volunteer = volunteer_user.id
-		exams_list = Exam.query.filter((Exam.volunteer_id == id_of_volunteer) & (Exam.exam_request_status == "open")).all()
+		exams_list = Exam.query.filter((Exam.volunteer_id == id_of_volunteer) & (Exam.exam_request_status == "in progress")).all()
 		name_json = {}
 
 		return [exam.json() for exam in exams_list]
