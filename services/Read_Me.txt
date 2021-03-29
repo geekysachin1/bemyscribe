@@ -51,3 +51,17 @@ Swagger Integration for API Documentation/Testing
 1. Whenever you create new API, add Scheema, and register API to docs
 2. Swagger URL: http://127.0.0.1:5000/swagger-ui/
 3. Click any API and Try Out
+
+
+
+Steps to get and pass token
+1. to get token
+Request : post
+url: localhost:5000/auth
+sample jason {"username":"arun@gmail.com","password":"asdf1234"}
+
+2. If you want to access authorised url
+Add headers as follows
+key:  Authorization
+value: JWT paste the token generated from auth url 
+Note: the token valid only for 5 minutes. 
