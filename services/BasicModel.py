@@ -370,9 +370,29 @@ class VolunteerExamDashboard(Resource):
 		volunteer_user = Volunteer.query.filter_by(email = email).first()
 		id_of_volunteer = volunteer_user.id
 		exams_list = Exam.query.filter((Exam.volunteer_id == id_of_volunteer) & (Exam.exam_request_status == "in progress")).all()
+		volunteer_pincode = volunteer_user.pincode
+		#add 5 next and prev pincodes neares to volunteer's pincode
+		pincodes = []
+		pincodes.__add__(volunteer_pincode)
+		temp = volunteer_pincode
+		temp2 = volunteer_pincode	
+		for i in range(0,4):
+			next_pin = temp + 1
+			pincodes.__add__(next_pin)
+			temp = next_pin
+
+			prev_pin = temp2 - 1
+			pincodes.__add__(prev_pin)
+			temp2 = prev_pin
+		
+		#TODO: Check the below line of code is correct
+		exam_list_by_location = Exam.query.filter(Exam.exam_area_pincode in pincodes).all()
+		all_exams = exams_list + exam_list_by_location
+		#removing duplicates if any
+		all_exams = list(set(all_exams))
 		name_json = {}
 
-		return [exam.json() for exam in exams_list]
+		return [exam.json() for exam in all_exams]
 
 api.add_resource(DisabledExamDashboard,'/disabledExamDashboard/<email>')
 api.add_resource(VolunteerExamDashboard,'/volunteerExamDashboard/<string:email>')
